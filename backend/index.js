@@ -5,9 +5,8 @@ const port = 3001
 const cors = require('cors')
 app.use(cors())
 
-app.get('/', (req, res) => {
-    res.send('Hello World')
-})
+const alertsRouter = require('./routes/alerts')
+app.use('/alerts', alertsRouter)
 
 app.listen(port, () => {
     console.log(`Server listening at port ${port}`)
