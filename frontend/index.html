@@ -5,9 +5,22 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>NWS Active Alert Map</title>
         <link rel="stylesheet" href="styles.css" />
+        <link
+            href="https://unpkg.com/maplibre-gl@^5.6.1/dist/maplibre-gl.css"
+            rel="stylesheet"
+        />
+
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+            rel="stylesheet"
+        />
     </head>
     <body>
-        <div id="app">Hello World!</div>
-        <script src="app.js"></script>
+        <div id="app">NWS Active Alert Map</div>
+        <div id="map"></div>
+        <script src="https://unpkg.com/maplibre-gl@^5.6.1/dist/maplibre-gl.js"></script>
+        <script type="module" src="app.js"></script>
     </body>
 </html>
