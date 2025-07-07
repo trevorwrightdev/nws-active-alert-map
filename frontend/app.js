@@ -1,15 +1,15 @@
 var map = new maplibregl.Map({
     container: 'map', // container id
     style: 'https://demotiles.maplibre.org/style.json', // style URL
-    center: [0, 0], // starting position [lng, lat]
-    zoom: 1, // starting zoom
+    center: [-98.5795, 39.8283], // starting position [lng, lat] - center of United States
+    zoom: 3, // starting zoom - shows most of the continental US
 })
 
 async function init() {
-    const { data: alerts, error: alertsError } = await fetchAlerts()
+    const { data: alertData, error: alertsError } = await fetchAlerts()
 
-    if (alerts) {
-        console.log(alerts)
+    if (alertData) {
+        drawAlertsOnMap(map, alertData.features)
     }
 }
 
