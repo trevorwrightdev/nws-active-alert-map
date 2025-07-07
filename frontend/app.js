@@ -4,3 +4,13 @@ var map = new maplibregl.Map({
     center: [0, 0], // starting position [lng, lat]
     zoom: 1, // starting zoom
 })
+
+async function init() {
+    const { data: alerts, error: alertsError } = await fetchAlerts()
+
+    if (alerts) {
+        console.log(alerts)
+    }
+}
+
+init()
