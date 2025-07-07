@@ -7,9 +7,16 @@ async function fetchAlerts() {
         }
 
         const data = await response.json()
-        return { data, error: null }
+        return { data: data.features, error: null }
     } catch (error) {
         console.error('Error fetching alerts:', error)
         return { data: null, error: error.message }
     }
+}
+
+function convertSameToFips(same) {
+    if (typeof same !== 'string') return null
+    if (same.length === 6 && same.startsWith('0')) return same.slice(1)
+    if (same.length === 5) return same
+    return null
 }

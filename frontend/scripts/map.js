@@ -1,33 +1,35 @@
 function drawAlertsOnMap(map, alerts) {
-    alerts.forEach((alert, index) => {
-        if (alert.geometry && alert.geometry.coordinates) {
-            const sourceId = `alert-${index}`
-            const layerId = `alert-layer-${index}`
+    const features = alerts
+        .filter(alert => alert.geometry && alert.geometry.coordinates)
+        .map(alert => ({
+            type: 'Feature',
+            geometry: alert.geometry,
+            properties: alert.properties || {},
+        }))
 
-            map.addSource(sourceId, {
-                type: 'geojson',
-                data: {
-                    type: 'Feature',
-                    geometry: alert.geometry,
-                    properties: alert.properties || {},
-                },
-            })
+    if (features.length > 0) {
+        map.addSource('alerts', {
+            type: 'geojson',
+            data: {
+                type: 'FeatureCollection',
+                features: features,
+            },
+        })
 
-            map.addLayer({
-                id: layerId,
-                type: 'fill',
-                source: sourceId,
-                paint: {
-                    'fill-color': '#ff0000',
-                    'fill-opacity': 1,
-                    'fill-outline-color': '#ff0000',
-                },
-            })
-        }
-    })
+        map.addLayer({
+            id: 'alert-layer',
+            type: 'fill',
+            source: 'alerts',
+            paint: {
+                'fill-color': '#ff0000',
+                'fill-opacity': 1,
+                'fill-outline-color': '#ff0000',
+            },
+        })
+    }
 }
 
-async function drawCounties(map) {
+async function drawCounties(map, alerts) {
     try {
         const response = await fetch('data/county-shapefile-reduced.json')
         const countyData = await response.json()
@@ -43,7 +45,7 @@ async function drawCounties(map) {
                 type: 'line',
                 source: 'counties',
                 paint: {
-                    'line-color': '#ffffff',
+                    'line-color': '#000000',
                     'line-width': 1,
                     'line-opacity': 1,
                 },
