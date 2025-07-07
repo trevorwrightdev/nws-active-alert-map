@@ -30,41 +30,37 @@ function drawAlertsOnMap(map, alerts) {
 }
 
 function drawCounties(map, countyData) {
-    if (countyData.features) {
-        map.addSource('counties', {
-            type: 'geojson',
-            data: countyData,
-        })
+    map.addSource('counties', {
+        type: 'geojson',
+        data: countyData,
+    })
 
-        map.addLayer({
-            id: 'county-boundaries',
-            type: 'line',
-            source: 'counties',
-            paint: {
-                'line-color': '#808080',
-                'line-width': 0.5,
-                'line-opacity': 0.5,
-            },
-        })
-    }
+    map.addLayer({
+        id: 'county-boundaries',
+        type: 'line',
+        source: 'counties',
+        paint: {
+            'line-color': '#808080',
+            'line-width': 0.5,
+            'line-opacity': 0.5,
+        },
+    })
 }
 
 function drawStates(map, stateData) {
-    if (stateData.features) {
-        map.addSource('states', {
-            type: 'geojson',
-            data: stateData,
-        })
+    map.addSource('states', {
+        type: 'geojson',
+        data: stateData,
+    })
 
-        map.addLayer({
-            id: 'state-boundaries',
-            type: 'line',
-            source: 'states',
-            paint: {
-                'line-color': '#000000',
-                'line-width': 1,
-                'line-opacity': 1,
-            },
-        })
-    }
+    map.addLayer({
+        id: 'state-boundaries',
+        type: 'line',
+        source: 'states',
+        paint: {
+            'line-color': '#000000',
+            'line-width': 1,
+            'line-opacity': 1,
+        },
+    })
 }

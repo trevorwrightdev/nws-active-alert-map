@@ -11,7 +11,7 @@ var map = new maplibregl.Map({
 
 async function init() {
     const { data: alerts } = await fetchAlerts()
-    const countyData = await getJson('data/county-shapefile-reduced.json')
+    const countyData = await getJson('data/county-shapefile.json')
     const stateData = await getJson('data/state-shapefile.json')
 
     if (alerts) {
@@ -19,6 +19,10 @@ async function init() {
         drawCounties(map, countyData)
         drawStates(map, stateData)
     }
+
+    map.on('idle', () => {
+        document.getElementById('map').style.display = 'block'
+    })
 }
 
 init()
