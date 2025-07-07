@@ -14,6 +14,21 @@ async function fetchAlerts() {
     }
 }
 
+async function getJson(url) {
+    try {
+        const response = await fetch(url)
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`)
+        }
+
+        return await response.json()
+    } catch (error) {
+        console.error(`Error fetching ${url}:`, error)
+        throw error
+    }
+}
+
 function convertSameToFips(same) {
     if (typeof same !== 'string') return null
     if (same.length === 6 && same.startsWith('0')) return same.slice(1)
