@@ -36,6 +36,22 @@ function drawCounties(map, countyData) {
     })
 
     map.addLayer({
+        id: 'county-fills',
+        type: 'fill',
+        source: 'counties',
+        paint: {
+            'fill-color': [
+                'match',
+                ['get', 'FIPS'],
+                '51083',
+                '#0000ff',
+                '#ffffff',
+            ],
+            'fill-opacity': 0.4,
+        },
+    })
+
+    map.addLayer({
         id: 'county-boundaries',
         type: 'line',
         source: 'counties',
