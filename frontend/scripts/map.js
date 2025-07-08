@@ -68,7 +68,7 @@ function drawCountiesWithAlerts(map, countyData, alerts) {
     for (const alert of alertsWithNoGeometry) {
         const fipsCodes = alert.properties.geocode.SAME || []
         const event = alert.properties.event
-        const color = COLOR_MAP[event] || '#9999ff'
+        const color = getEventColor(event)
 
         for (const fips of fipsCodes) {
             let processedFips = fips

@@ -87,3 +87,5 @@ const COLOR_MAP = {
     'Short Term Forecast': '#98FB98',
     'Hazardous Weather Outlook': '#EEE8AA',
 }
+
+const FALLBACK_COLOR = '#9999ff'

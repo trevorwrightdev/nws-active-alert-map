@@ -14,6 +14,10 @@ async function fetchAlerts() {
     }
 }
 
+function getEventColor(event) {
+    return COLOR_MAP[event] || FALLBACK_COLOR
+}
+
 async function getJson(url) {
     try {
         const response = await fetch(url)
@@ -102,7 +106,7 @@ function showAlertListPage() {
 }
 
 function getPopupHtml(alertProperties) {
-    const eventColor = COLOR_MAP[alertProperties.event] || '#000000'
+    const eventColor = getEventColor(alertProperties.event)
 
     return `
         <div style="color: black;">
@@ -146,7 +150,7 @@ function populateAlertListPage(alerts) {
         alertItem.className = 'alert-item'
         alertItem.style.cursor = 'pointer'
 
-        const eventColor = COLOR_MAP[alert.properties.event] || '#000000'
+        const eventColor = getEventColor(alert.properties.event)
         alertItem.style.borderLeftColor = eventColor
 
         alertItem.innerHTML = `
