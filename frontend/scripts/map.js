@@ -16,14 +16,20 @@ function drawAlertsOnMap(map, alerts) {
             },
         })
 
+        const matchExpr = ['match', ['get', 'event']]
+        for (const [event, color] of Object.entries(COLOR_MAP)) {
+            matchExpr.push(event, color)
+        }
+        matchExpr.push('#ff0000')
+
         map.addLayer({
             id: 'alert-layer',
             type: 'fill',
             source: 'alerts',
             paint: {
-                'fill-color': '#ff0000',
+                'fill-color': matchExpr,
                 'fill-opacity': 1,
-                'fill-outline-color': '#ff0000',
+                'fill-outline-color': matchExpr,
             },
         })
     }
@@ -39,20 +45,18 @@ function drawCountiesWithAlerts(map, countyData, alerts) {
         a => a.geometry === null && a.properties?.geocode?.SAME?.[0]
     )
 
-    const fipsToColor = [
-        ...new Set(
-            alertsWithNoGeometry
-                .map(a => a.properties.geocode.SAME?.[0])
-                .filter(Boolean)
-                .map(raw =>
-                    raw.length === 6 && raw.startsWith('0') ? raw.slice(1) : raw
-                )
-        ),
-    ]
+    const fipsToColorMap = {}
+    for (const alert of alertsWithNoGeometry) {
+        let fips = alert.properties.geocode.SAME?.[0]
+        if (fips.length === 6 && fips.startsWith('0')) fips = fips.slice(1)
+        const event = alert.properties.event
+        const color = COLOR_MAP[event] || '#9999ff'
+        fipsToColorMap[fips] = color
+    }
 
     const matchExpr = ['match', ['get', 'FIPS']]
-    for (const fips of fipsToColor) {
-        matchExpr.push(fips, '#9999ff')
+    for (const [fips, color] of Object.entries(fipsToColorMap)) {
+        matchExpr.push(fips, color)
     }
     matchExpr.push('#ffffff')
 

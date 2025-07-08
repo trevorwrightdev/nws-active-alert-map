@@ -17,6 +17,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: 15px;
 }
 
 #map-container {
@@ -32,6 +33,25 @@ body {
     width: 100%;
     height: 100%;
     display: none;
+}
+
+#legend {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 12px;
+}
+
+.legend-item-color {
+    width: 20px;
+    height: 20px;
+    background: red;
 }
 
 @keyframes shimmer {
