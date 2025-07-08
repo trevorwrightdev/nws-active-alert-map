@@ -1,4 +1,4 @@
-function drawAlertsOnMap(map, alerts) {
+function drawAlertPolygons(map, alerts) {
     const features = alerts
         .filter(alert => alert.geometry && alert.geometry.coordinates)
         .map(alert => ({
@@ -7,32 +7,46 @@ function drawAlertsOnMap(map, alerts) {
             properties: alert.properties || {},
         }))
 
-    if (features.length > 0) {
-        map.addSource('alerts', {
-            type: 'geojson',
-            data: {
-                type: 'FeatureCollection',
-                features: features,
-            },
-        })
+    if (features.length === 0) return
 
-        const matchExpr = ['match', ['get', 'event']]
-        for (const [event, color] of Object.entries(COLOR_MAP)) {
-            matchExpr.push(event, color)
-        }
-        matchExpr.push('#ff0000')
+    map.addSource('alerts', {
+        type: 'geojson',
+        data: {
+            type: 'FeatureCollection',
+            features: features,
+        },
+    })
 
-        map.addLayer({
-            id: 'alert-layer',
-            type: 'fill',
-            source: 'alerts',
-            paint: {
-                'fill-color': matchExpr,
-                'fill-opacity': 1,
-                'fill-outline-color': matchExpr,
-            },
-        })
+    const matchExpr = ['match', ['get', 'event']]
+    for (const [event, color] of Object.entries(COLOR_MAP)) {
+        matchExpr.push(event, color)
     }
+    matchExpr.push('#ff0000')
+
+    map.addLayer({
+        id: 'alert-layer',
+        type: 'fill',
+        source: 'alerts',
+        paint: {
+            'fill-color': matchExpr,
+            'fill-opacity': 1,
+            'fill-outline-color': matchExpr,
+        },
+    })
+
+    map.on('click', 'alert-layer', e => {
+        const feature = e.features[0]
+        console.log(feature.properties)
+    })
+
+    map.on('mousemove', 'alert-layer', e => {
+        const feature = e.features[0]
+        if (feature) {
+            map.getCanvas().style.cursor = 'default'
+        } else {
+            map.getCanvas().style.cursor = ''
+        }
+    })
 }
 
 function drawCountiesWithAlerts(map, countyData, alerts) {
@@ -46,12 +60,14 @@ function drawCountiesWithAlerts(map, countyData, alerts) {
     )
 
     const fipsToColorMap = {}
+    const fipsToAlertMap = {}
     for (const alert of alertsWithNoGeometry) {
         let fips = alert.properties.geocode.SAME?.[0]
         if (fips.length === 6 && fips.startsWith('0')) fips = fips.slice(1)
         const event = alert.properties.event
         const color = COLOR_MAP[event] || '#9999ff'
         fipsToColorMap[fips] = color
+        fipsToAlertMap[fips] = alert
     }
 
     const matchExpr = ['match', ['get', 'FIPS']]
@@ -79,6 +95,30 @@ function drawCountiesWithAlerts(map, countyData, alerts) {
             'line-width': 0.5,
             'line-opacity': 0.5,
         },
+    })
+
+    map.on('click', 'county-fills', e => {
+        const feature = e.features[0]
+        const fips = feature.properties.FIPS
+        const alert = fipsToAlertMap[fips]
+
+        if (alert) {
+            console.log(alert.properties)
+        }
+    })
+
+    map.on('mousemove', 'county-fills', e => {
+        const feature = e.features[0]
+        if (feature) {
+            const fips = feature.properties.FIPS
+            const alert = fipsToAlertMap[fips]
+
+            if (alert) {
+                map.getCanvas().style.cursor = 'default'
+            } else {
+                map.getCanvas().style.cursor = ''
+            }
+        }
     })
 }
 

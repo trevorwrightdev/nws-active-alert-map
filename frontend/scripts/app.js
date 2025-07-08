@@ -32,18 +32,17 @@ function generateLegend() {
 }
 
 async function init() {
+    generateLegend()
+
     const { data: alerts } = await fetchAlerts()
     const countyData = await getJson('data/county-shapefile.json')
     const stateData = await getJson('data/state-shapefile.json')
 
-    generateLegend()
+    if (!alerts) return
 
-    if (alerts) {
-        drawCountiesWithAlerts(map, countyData, alerts)
-        drawAlertsOnMap(map, alerts)
-
-        drawStates(map, stateData)
-    }
+    drawCountiesWithAlerts(map, countyData, alerts)
+    drawAlertPolygons(map, alerts)
+    drawStates(map, stateData)
 
     map.on('idle', () => {
         document.getElementById('map').style.display = 'block'
