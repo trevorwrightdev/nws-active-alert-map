@@ -49,6 +49,7 @@ body {
 
 #map-page {
     width: 100%;
+    padding-bottom: 30px;
 }
 
 #map-container {
@@ -130,6 +131,12 @@ body {
     gap: 20px;
 }
 
+#alert-list-page {
+    display: none;
+    padding: 15px;
+    padding-bottom: 30px;
+}
+
 .back-button {
     background: white;
     color: black;
@@ -151,4 +158,35 @@ body {
 
 .back-button:active {
     transform: translateY(1px);
+}
+
+#alert-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.alert-item {
+    background: white;
+    color: black;
+    padding: 15px;
+    border-radius: 8px;
+    border-left: 4px solid #ff6b6b;
+}
+
+.alert-headline {
+    font-weight: 600;
+    font-size: 16px;
+    margin-bottom: 8px;
+}
+
+.alert-severity {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 5px;
+}
+
+.alert-expires {
+    font-size: 12px;
+    color: #888;
 }

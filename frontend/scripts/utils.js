@@ -31,6 +31,7 @@ async function getJson(url) {
 
 function showAlertInfoPage(alertProperties) {
     document.getElementById('map-page').style.display = 'none'
+    document.getElementById('alert-list-page').style.display = 'none'
 
     const alertInfoPage = document.getElementById('alert-info-page')
     alertInfoPage.style.display = 'flex'
@@ -85,6 +86,13 @@ function showAlertInfoPage(alertProperties) {
 function showHomePage() {
     document.getElementById('map-page').style.display = 'block'
     document.getElementById('alert-info-page').style.display = 'none'
+    document.getElementById('alert-list-page').style.display = 'none'
+}
+
+function showAlertListPage() {
+    document.getElementById('map-page').style.display = 'none'
+    document.getElementById('alert-info-page').style.display = 'none'
+    document.getElementById('alert-list-page').style.display = 'block'
 }
 
 function getPopupHtml(alertProperties) {
@@ -97,6 +105,9 @@ function getPopupHtml(alertProperties) {
     }</h3>
             <p style="color: black; margin: 5px 0;"><strong>Area:</strong> ${
                 alertProperties.areaDesc || 'N/A'
+            }</p>
+            <p style="color: black; margin: 5px 0;"><strong>Severity:</strong> ${
+                alertProperties.severity || 'N/A'
             }</p>
             <p style="color: black; margin: 5px 0;"><strong>Effective:</strong> ${
                 alertProperties.effective || 'N/A'

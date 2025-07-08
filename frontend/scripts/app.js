@@ -52,3 +52,7 @@ async function init() {
 init()
 
 document.getElementById('back-to-home').addEventListener('click', showHomePage)
+document.getElementById('nav-map').addEventListener('click', showHomePage)
+document
+    .getElementById('nav-alerts')
+    .addEventListener('click', showAlertListPage)
