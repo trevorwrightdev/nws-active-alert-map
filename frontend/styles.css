@@ -13,6 +13,34 @@ body {
     color: white;
 }
 
+#navbar {
+    background: white;
+    display: flex;
+    gap: 0;
+}
+
+.nav-button {
+    background: transparent;
+    color: black;
+    border: none;
+    padding: 15px 20px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.nav-button:hover {
+    background: #f0f0f0;
+    color: black;
+}
+
+.nav-button.active {
+    background: #f0f0f0;
+    color: black;
+}
+
 #app {
     margin: 0 auto;
     width: 100%;
@@ -96,7 +124,31 @@ body {
 #alert-info-page {
     display: none;
     padding: 15px;
+    padding-bottom: 30px;
     display: none;
     flex-direction: column;
     gap: 20px;
+}
+
+.back-button {
+    background: white;
+    color: black;
+    border: 1px solid black;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    align-self: flex-start;
+    margin-top: 10px;
+}
+
+.back-button:hover {
+    background: #f0f0f0;
+}
+
+.back-button:active {
+    transform: translateY(1px);
 }

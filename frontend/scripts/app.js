@@ -50,3 +50,5 @@ async function init() {
 }
 
 init()
+
+document.getElementById('back-to-home').addEventListener('click', showHomePage)

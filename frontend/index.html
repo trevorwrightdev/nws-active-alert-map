@@ -18,6 +18,10 @@
         />
     </head>
     <body>
+        <nav id="navbar">
+            <button id="nav-map" class="nav-button active">Map</button>
+            <button id="nav-alerts" class="nav-button">Alert List</button>
+        </nav>
         <div id="app">
             <div id="map-page">
                 <h1 class="page-title">NWS Active Alert Map</h1>
@@ -31,6 +35,9 @@
                 </div>
             </div>
             <div id="alert-info-page">
+                <button id="back-to-home" class="back-button">
+                    ← Back to Home
+                </button>
                 <h1>Alert Info</h1>
                 <div id="alert-headline"></div>
                 <div id="alert-event"></div>

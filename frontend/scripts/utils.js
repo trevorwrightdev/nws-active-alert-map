@@ -30,7 +30,6 @@ async function getJson(url) {
 }
 
 function showAlertInfoPage(alertProperties) {
-    console.log(alertProperties)
     document.getElementById('map-page').style.display = 'none'
 
     const alertInfoPage = document.getElementById('alert-info-page')
@@ -83,12 +82,19 @@ function showAlertInfoPage(alertProperties) {
     ).innerHTML = `More Info: <a href="${alertProperties.web}" target="_blank">${alertProperties.web}</a>`
 }
 
+function showHomePage() {
+    document.getElementById('map-page').style.display = 'block'
+    document.getElementById('alert-info-page').style.display = 'none'
+}
+
 function getPopupHtml(alertProperties) {
+    const eventColor = COLOR_MAP[alertProperties.event] || '#000000'
+
     return `
         <div style="color: black;">
-            <h3 style="color: black; margin: 0 0 10px 0;">${
-                alertProperties.event || 'Alert'
-            }</h3>
+            <h3 style="color: ${eventColor}; margin: 0 0 10px 0;">${
+        alertProperties.event || 'Alert'
+    }</h3>
             <p style="color: black; margin: 5px 0;"><strong>Area:</strong> ${
                 alertProperties.areaDesc || 'N/A'
             }</p>
@@ -98,6 +104,12 @@ function getPopupHtml(alertProperties) {
             <p style="color: black; margin: 5px 0;"><strong>Expires:</strong> ${
                 alertProperties.expires || 'N/A'
             }</p>
+            <button onclick="showAlertInfoPage(${JSON.stringify(
+                alertProperties
+            ).replace(
+                /"/g,
+                '&quot;'
+            )})" style="background-color: white; color: black; border: 1px solid black; padding: 5px 10px; border-radius: 3px; cursor: pointer; margin-top: 10px;">More Info</button>
         </div>
     `
 }
