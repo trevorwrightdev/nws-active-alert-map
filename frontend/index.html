@@ -19,13 +19,17 @@
     </head>
     <body>
         <div id="app">
-            <h1>NWS Active Alert Map</h1>
-            <div id="map-container">
-                <div id="loading"></div>
-                <div id="map"></div>
+            <div id="map-page">
+                <h1 class="page-title">NWS Active Alert Map</h1>
+                <div id="map-container">
+                    <div id="loading"></div>
+                    <div id="map"></div>
+                </div>
+                <div id="legend-container">
+                    <h2>Legend</h2>
+                    <div id="legend"></div>
+                </div>
             </div>
-            <h2>Legend</h2>
-            <div id="legend"></div>
         </div>
         <script src="https://unpkg.com/maplibre-gl@^5.6.1/dist/maplibre-gl.js"></script>
         <script src="scripts/constants.js"></script>
