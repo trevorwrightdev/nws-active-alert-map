@@ -62,7 +62,7 @@ const COLOR_MAP = {
     'Extreme Cold Warning': '#B0C4DE',
     'Extreme Cold Watch': '#5F9EA0',
     'Cold Weather Advisory': '#AFEEEE',
-    'Winter Storm Warning': '#rgbnull',
+    'Winter Storm Warning': '#FF69B4',
     'Ice Storm Warning': '#8B008B',
     'Winter Storm Watch': '#4682B4',
     'Winter Weather Advisory': '#7B68EE',
@@ -83,7 +83,7 @@ const COLOR_MAP = {
     'Tsunami Warning': '#FD6347',
     'Tsunami Watch': '#FF00FF',
     'Tsunami Advisory': '#D2691E',
-    'Tsunami Information Statement': '#rgbnull',
+    'Tsunami Information Statement': '#FFCCFF',
     'Short Term Forecast': '#98FB98',
     'Hazardous Weather Outlook': '#EEE8AA',
 }
