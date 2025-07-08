@@ -87,12 +87,18 @@ function showHomePage() {
     document.getElementById('map-page').style.display = 'block'
     document.getElementById('alert-info-page').style.display = 'none'
     document.getElementById('alert-list-page').style.display = 'none'
+
+    document.getElementById('nav-map').classList.add('active')
+    document.getElementById('nav-alerts').classList.remove('active')
 }
 
 function showAlertListPage() {
     document.getElementById('map-page').style.display = 'none'
     document.getElementById('alert-info-page').style.display = 'none'
     document.getElementById('alert-list-page').style.display = 'block'
+
+    document.getElementById('nav-map').classList.remove('active')
+    document.getElementById('nav-alerts').classList.add('active')
 }
 
 function getPopupHtml(alertProperties) {
@@ -123,4 +129,49 @@ function getPopupHtml(alertProperties) {
             )})" style="background-color: white; color: black; border: 1px solid black; padding: 5px 10px; border-radius: 3px; cursor: pointer; margin-top: 10px;">More Info</button>
         </div>
     `
+}
+
+function populateAlertListPage(alerts) {
+    const alertListContainer = document.getElementById('alert-list')
+    alertListContainer.innerHTML = ''
+
+    if (!alerts || alerts.length === 0) {
+        alertListContainer.innerHTML =
+            '<div class="no-alerts">No active alerts</div>'
+        return
+    }
+
+    alerts.forEach(alert => {
+        const alertItem = document.createElement('div')
+        alertItem.className = 'alert-item'
+        alertItem.style.cursor = 'pointer'
+
+        const eventColor = COLOR_MAP[alert.properties.event] || '#000000'
+        alertItem.style.borderLeftColor = eventColor
+
+        alertItem.innerHTML = `
+            <div class="alert-headline">
+                ${
+                    alert.properties.headline ||
+                    alert.properties.event ||
+                    'Alert'
+                }
+            </div>
+            <div class="alert-severity">${
+                alert.properties.severity || 'N/A'
+            }</div>
+            <div class="alert-expires">
+                Expires: ${alert.properties.expires || 'N/A'}
+            </div>
+        `
+
+        alertItem.addEventListener('click', () => {
+            showAlertInfoPage(alert.properties)
+            setTimeout(() => {
+                window.scrollTo({ top: 0, behavior: 'smooth' })
+            }, 100)
+        })
+
+        alertListContainer.appendChild(alertItem)
+    })
 }

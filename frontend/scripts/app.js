@@ -43,6 +43,7 @@ async function init() {
     drawCountiesWithAlerts(map, countyData, alerts)
     drawAlertPolygons(map, alerts)
     drawStates(map, stateData)
+    populateAlertListPage(alerts)
 
     map.on('idle', () => {
         document.getElementById('map').style.display = 'block'
