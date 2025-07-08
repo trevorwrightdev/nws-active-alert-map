@@ -1,6 +1,6 @@
 async function fetchAlerts() {
     try {
-        const response = await fetch('http://localhost:3001/alerts')
+        const response = await fetch(SERVER_URL + '/alerts')
 
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`)
@@ -109,28 +109,25 @@ function getPopupHtml(alertProperties) {
     const eventColor = getEventColor(alertProperties.event)
 
     return `
-        <div style="color: black;">
-            <h3 style="color: ${eventColor}; margin: 0 0 10px 0;">${
+        <div class="popup-container">
+            <h3 class="popup-title" style="color: ${eventColor};">${
         alertProperties.event || 'Alert'
     }</h3>
-            <p style="color: black; margin: 5px 0;"><strong>Area:</strong> ${
+            <p class="popup-text"><strong>Area:</strong> ${
                 alertProperties.areaDesc || 'N/A'
             }</p>
-            <p style="color: black; margin: 5px 0;"><strong>Severity:</strong> ${
+            <p class="popup-text"><strong>Severity:</strong> ${
                 alertProperties.severity || 'N/A'
             }</p>
-            <p style="color: black; margin: 5px 0;"><strong>Effective:</strong> ${
+            <p class="popup-text"><strong>Effective:</strong> ${
                 alertProperties.effective || 'N/A'
             }</p>
-            <p style="color: black; margin: 5px 0;"><strong>Expires:</strong> ${
+            <p class="popup-text"><strong>Expires:</strong> ${
                 alertProperties.expires || 'N/A'
             }</p>
             <button onclick="showAlertInfoPage(${JSON.stringify(
                 alertProperties
-            ).replace(
-                /"/g,
-                '&quot;'
-            )})" style="background-color: white; color: black; border: 1px solid black; padding: 5px 10px; border-radius: 3px; cursor: pointer; margin-top: 10px;">More Info</button>
+            ).replace(/"/g, '&quot;')})" class="popup-button">More Info</button>
         </div>
     `
 }

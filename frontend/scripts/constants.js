@@ -89,3 +89,5 @@ const COLOR_MAP = {
 }
 
 const FALLBACK_COLOR = '#9999ff'
+
+const SERVER_URL = 'http://localhost:3001'
