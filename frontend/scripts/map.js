@@ -60,18 +60,24 @@ function drawCountiesWithAlerts(map, countyData, alerts) {
     })
 
     const alertsWithNoGeometry = alerts.filter(
-        a => a.geometry === null && a.properties?.geocode?.SAME?.[0]
+        a => a.geometry === null && a.properties?.geocode?.SAME?.length > 0
     )
 
     const fipsToColorMap = {}
     const fipsToAlertMap = {}
     for (const alert of alertsWithNoGeometry) {
-        let fips = alert.properties.geocode.SAME?.[0]
-        if (fips.length === 6 && fips.startsWith('0')) fips = fips.slice(1)
+        const fipsCodes = alert.properties.geocode.SAME || []
         const event = alert.properties.event
         const color = COLOR_MAP[event] || '#9999ff'
-        fipsToColorMap[fips] = color
-        fipsToAlertMap[fips] = alert
+
+        for (const fips of fipsCodes) {
+            let processedFips = fips
+            if (processedFips.length === 6 && processedFips.startsWith('0')) {
+                processedFips = processedFips.slice(1)
+            }
+            fipsToColorMap[processedFips] = color
+            fipsToAlertMap[processedFips] = alert
+        }
     }
 
     const matchExpr = ['match', ['get', 'FIPS']]
