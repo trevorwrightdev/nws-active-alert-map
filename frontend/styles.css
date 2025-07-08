@@ -88,3 +88,15 @@ body {
         padding: 0 15px;
     }
 }
+
+#alert-headline {
+    font-weight: 600;
+}
+
+#alert-info-page {
+    display: none;
+    padding: 15px;
+    display: none;
+    flex-direction: column;
+    gap: 20px;
+}

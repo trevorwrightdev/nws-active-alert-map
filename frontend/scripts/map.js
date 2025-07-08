@@ -36,7 +36,11 @@ function drawAlertPolygons(map, alerts) {
 
     map.on('click', 'alert-layer', e => {
         const feature = e.features[0]
-        console.log(feature.properties)
+        // showAlertInfoPage(feature.properties)
+        new maplibregl.Popup()
+            .setLngLat(e.lngLat)
+            .setHTML(getPopupHtml(feature.properties))
+            .addTo(map)
     })
 
     map.on('mousemove', 'alert-layer', e => {
@@ -103,7 +107,11 @@ function drawCountiesWithAlerts(map, countyData, alerts) {
         const alert = fipsToAlertMap[fips]
 
         if (alert) {
-            console.log(alert.properties)
+            // showAlertInfoPage(alert.properties)
+            new maplibregl.Popup()
+                .setLngLat(e.lngLat)
+                .setHTML(getPopupHtml(alert.properties))
+                .addTo(map)
         }
     })
 
