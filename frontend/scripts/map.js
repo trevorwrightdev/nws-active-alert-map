@@ -29,25 +29,40 @@ function drawAlertsOnMap(map, alerts) {
     }
 }
 
-function drawCounties(map, countyData) {
+function drawCountiesWithAlerts(map, countyData, alerts) {
     map.addSource('counties', {
         type: 'geojson',
         data: countyData,
     })
+
+    const alertsWithNoGeometry = alerts.filter(
+        a => a.geometry === null && a.properties?.geocode?.SAME?.[0]
+    )
+
+    const fipsToColor = [
+        ...new Set(
+            alertsWithNoGeometry
+                .map(a => a.properties.geocode.SAME?.[0])
+                .filter(Boolean)
+                .map(raw =>
+                    raw.length === 6 && raw.startsWith('0') ? raw.slice(1) : raw
+                )
+        ),
+    ]
+
+    const matchExpr = ['match', ['get', 'FIPS']]
+    for (const fips of fipsToColor) {
+        matchExpr.push(fips, '#9999ff')
+    }
+    matchExpr.push('#ffffff')
 
     map.addLayer({
         id: 'county-fills',
         type: 'fill',
         source: 'counties',
         paint: {
-            'fill-color': [
-                'match',
-                ['get', 'FIPS'],
-                '51083',
-                '#0000ff',
-                '#ffffff',
-            ],
-            'fill-opacity': 0.4,
+            'fill-color': matchExpr,
+            'fill-opacity': 1,
         },
     })
 

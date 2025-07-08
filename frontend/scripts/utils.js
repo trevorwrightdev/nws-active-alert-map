@@ -28,10 +28,3 @@ async function getJson(url) {
         throw error
     }
 }
-
-function convertSameToFips(same) {
-    if (typeof same !== 'string') return null
-    if (same.length === 6 && same.startsWith('0')) return same.slice(1)
-    if (same.length === 5) return same
-    return null
-}

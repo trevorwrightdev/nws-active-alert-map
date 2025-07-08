@@ -1,12 +1,8 @@
 var map = new maplibregl.Map({
     container: 'map', // container id
-    style: 'https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json', // clean, minimal style
-    // Alternative styles you can try:
-    // 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json' // dark theme
-    // 'https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json' // colorful
-    // 'https://demotiles.maplibre.org/style.json' // original demo style
+    style: 'https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json',
     center: [-98.5795, 39.8283], // starting position [lng, lat] - center of United States
-    zoom: 3, // starting zoom - shows most of the continental US,
+    zoom: 3,
 })
 
 async function init() {
@@ -15,8 +11,9 @@ async function init() {
     const stateData = await getJson('data/state-shapefile.json')
 
     if (alerts) {
+        drawCountiesWithAlerts(map, countyData, alerts)
         drawAlertsOnMap(map, alerts)
-        drawCounties(map, countyData)
+
         drawStates(map, stateData)
     }
 
