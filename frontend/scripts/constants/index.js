@@ -1,4 +1,4 @@
-const COLOR_MAP = {
+export const COLOR_MAP = {
     'Severe Thunderstorm Warning': '#FFA500',
     'Flash Flood Warning': '#8B0000',
     'Severe Weather Statement': '#00FFFF',
@@ -88,6 +88,30 @@ const COLOR_MAP = {
     'Hazardous Weather Outlook': '#EEE8AA',
 }
 
-const FALLBACK_COLOR = '#9999ff'
+export const FALLBACK_COLOR = '#9999ff'
 
-const SERVER_URL = 'http://localhost:3001'
+export const MAP_CONFIG = {
+    container: 'map',
+    style: 'https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json',
+    center: [-98.5795, 39.8283],
+    zoom: 3,
+}
+
+export const LAYER_STYLES = {
+    countyBoundaries: {
+        'line-color': '#808080',
+        'line-width': 0.5,
+        'line-opacity': 0.5,
+    },
+    stateBoundaries: {
+        'line-color': '#000000',
+        'line-width': 1,
+        'line-opacity': 1,
+    },
+    alertPolygons: {
+        'fill-opacity': 1,
+    },
+    countyFills: {
+        'fill-opacity': 1,
+    },
+}

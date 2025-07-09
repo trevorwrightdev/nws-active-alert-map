@@ -1,20 +1,32 @@
-var map = new maplibregl.Map({
-    container: 'map', // container id
-    style: 'https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json',
-    center: [-98.5795, 39.8283], // starting position [lng, lat] - center of United States
-    zoom: 3,
-})
+import { MAP_CONFIG } from './constants/index.js'
+import { fetchAlerts, fetchJson } from './services/api.js'
+import { initializeSocket, socket } from './services/socket.js'
+import {
+    addAlertPolygonsLayer,
+    updateAlertPolygons,
+    addCountyLayers,
+    updateCountyFills,
+    addStateBoundariesLayer,
+} from './map/layers.js'
+import { populateAlertListPage } from './components/alert-list.js'
+import { generateLegend } from './components/legend.js'
+import {
+    initializeNavigation,
+    showAlertInfoPage,
+} from './components/navigation.js'
 
-async function init() {
+const map = new maplibregl.Map(MAP_CONFIG)
+
+async function initializeApp() {
     const { data: alerts } = await fetchAlerts()
-    const countyData = await getJson('data/county-shapefile.json')
-    const stateData = await getJson('data/state-shapefile.json')
+    const countyData = await fetchJson('data/county-shapefile.json')
+    const stateData = await fetchJson('data/state-shapefile.json')
 
     if (!alerts) return
 
-    initCountiesWithAlertsLayer(map, countyData, alerts.features)
-    initAlertPolygonsLayer(map, alerts.features)
-    drawStates(map, stateData)
+    addCountyLayers(map, countyData, alerts.features)
+    addAlertPolygonsLayer(map, alerts.features)
+    addStateBoundariesLayer(map, stateData)
     populateAlertListPage(alerts.features)
 
     map.on('idle', () => {
@@ -22,6 +34,7 @@ async function init() {
     })
 
     socket.on('alerts-update', alerts => {
+        console.log('Updating map...')
         updateAlertPolygons(map, alerts.features)
         updateCountyFills(map, alerts.features)
         populateAlertListPage(alerts.features)
@@ -29,11 +42,8 @@ async function init() {
 }
 
 generateLegend()
+initializeNavigation()
 
-document.getElementById('back-to-home').addEventListener('click', showHomePage)
-document.getElementById('nav-map').addEventListener('click', showHomePage)
-document
-    .getElementById('nav-alerts')
-    .addEventListener('click', showAlertListPage)
+window.showAlertInfoPage = showAlertInfoPage
 
-init()
+initializeApp()
