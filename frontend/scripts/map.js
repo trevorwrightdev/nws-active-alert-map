@@ -1,3 +1,5 @@
+let fipsToAlertMap = {}
+
 function initAlertPolygonsLayer(map, alerts) {
     const features = alertsToFeatures(alerts)
 
@@ -69,22 +71,7 @@ function initCountiesWithAlertsLayer(map, countyData, alerts) {
         data: countyData,
     })
 
-    const alertsWithNoGeometry = alerts.filter(
-        a => a.geometry === null && a.properties?.geocode?.SAME?.length > 0
-    )
-
-    const fipsToAlertMap = {}
-    for (const alert of alertsWithNoGeometry) {
-        const fipsCodes = alert.properties.geocode.SAME || []
-
-        for (const fips of fipsCodes) {
-            let processedFips = fips
-            if (processedFips.length === 6 && processedFips.startsWith('0')) {
-                processedFips = processedFips.slice(1)
-            }
-            fipsToAlertMap[processedFips] = alert
-        }
-    }
+    updateFipsToAlertMap(alerts)
 
     const matchExpr = getCountyFillMatchExpr(alerts)
 
@@ -138,12 +125,10 @@ function initCountiesWithAlertsLayer(map, countyData, alerts) {
 }
 
 function getCountyFillMatchExpr(alerts) {
-    const alertsWithNoGeometry = alerts.filter(
-        a => a.geometry === null && a.properties?.geocode?.SAME?.length > 0
-    )
+    const countyAlerts = getCountyAlerts(alerts)
 
     const fipsToColorMap = {}
-    for (const alert of alertsWithNoGeometry) {
+    for (const alert of countyAlerts) {
         const fipsCodes = alert.properties.geocode.SAME || []
         const event = alert.properties.event
         const color = getEventColor(event)
@@ -167,7 +152,29 @@ function getCountyFillMatchExpr(alerts) {
 
 function updateCountyFills(map, alerts) {
     const matchExpr = getCountyFillMatchExpr(alerts)
+    updateFipsToAlertMap(alerts)
     map.setPaintProperty('county-fills', 'fill-color', matchExpr)
+}
+
+function updateFipsToAlertMap(alerts) {
+    fipsToAlertMap = {}
+
+    for (const alert of getCountyAlerts(alerts)) {
+        const fipsCodes = alert.properties.geocode.SAME || []
+
+        for (let fips of fipsCodes) {
+            if (fips.length === 6 && fips.startsWith('0')) {
+                fips = fips.slice(1)
+            }
+            fipsToAlertMap[fips] = alert
+        }
+    }
+}
+
+function getCountyAlerts(alerts) {
+    return alerts.filter(
+        a => a.geometry === null && a.properties?.geocode?.SAME?.length > 0
+    )
 }
 
 function drawStates(map, stateData) {
