@@ -1,19 +1,11 @@
-function drawAlertPolygons(map, alerts) {
-    const features = alerts
-        .filter(alert => alert.geometry && alert.geometry.coordinates)
-        .map(alert => ({
-            type: 'Feature',
-            geometry: alert.geometry,
-            properties: alert.properties || {},
-        }))
-
-    if (features.length === 0) return
+function initAlertPolygonsLayer(map, alerts) {
+    const features = alertsToFeatures(alerts)
 
     map.addSource('alerts', {
         type: 'geojson',
         data: {
             type: 'FeatureCollection',
-            features: features,
+            features,
         },
     })
 
@@ -53,7 +45,25 @@ function drawAlertPolygons(map, alerts) {
     })
 }
 
-function drawCountiesWithAlerts(map, countyData, alerts) {
+function updateAlertPolygons(map, alerts) {
+    const features = alertsToFeatures(alerts)
+    map.getSource('alerts').setData({
+        type: 'FeatureCollection',
+        features,
+    })
+}
+
+function alertsToFeatures(alerts) {
+    return alerts
+        .filter(a => a.geometry && a.geometry.coordinates)
+        .map(a => ({
+            type: 'Feature',
+            geometry: a.geometry,
+            properties: a.properties || {},
+        }))
+}
+
+function initCountiesWithAlertsLayer(map, countyData, alerts) {
     map.addSource('counties', {
         type: 'geojson',
         data: countyData,
@@ -63,28 +73,20 @@ function drawCountiesWithAlerts(map, countyData, alerts) {
         a => a.geometry === null && a.properties?.geocode?.SAME?.length > 0
     )
 
-    const fipsToColorMap = {}
     const fipsToAlertMap = {}
     for (const alert of alertsWithNoGeometry) {
         const fipsCodes = alert.properties.geocode.SAME || []
-        const event = alert.properties.event
-        const color = getEventColor(event)
 
         for (const fips of fipsCodes) {
             let processedFips = fips
             if (processedFips.length === 6 && processedFips.startsWith('0')) {
                 processedFips = processedFips.slice(1)
             }
-            fipsToColorMap[processedFips] = color
             fipsToAlertMap[processedFips] = alert
         }
     }
 
-    const matchExpr = ['match', ['get', 'FIPS']]
-    for (const [fips, color] of Object.entries(fipsToColorMap)) {
-        matchExpr.push(fips, color)
-    }
-    matchExpr.push('#ffffff')
+    const matchExpr = getCountyFillMatchExpr(alerts)
 
     map.addLayer({
         id: 'county-fills',
@@ -113,7 +115,6 @@ function drawCountiesWithAlerts(map, countyData, alerts) {
         const alert = fipsToAlertMap[fips]
 
         if (alert) {
-            // showAlertInfoPage(alert.properties)
             new maplibregl.Popup()
                 .setLngLat(e.lngLat)
                 .setHTML(getPopupHtml(alert.properties))
@@ -134,6 +135,39 @@ function drawCountiesWithAlerts(map, countyData, alerts) {
             }
         }
     })
+}
+
+function getCountyFillMatchExpr(alerts) {
+    const alertsWithNoGeometry = alerts.filter(
+        a => a.geometry === null && a.properties?.geocode?.SAME?.length > 0
+    )
+
+    const fipsToColorMap = {}
+    for (const alert of alertsWithNoGeometry) {
+        const fipsCodes = alert.properties.geocode.SAME || []
+        const event = alert.properties.event
+        const color = getEventColor(event)
+
+        for (let fips of fipsCodes) {
+            if (fips.length === 6 && fips.startsWith('0')) {
+                fips = fips.slice(1)
+            }
+            fipsToColorMap[fips] = color
+        }
+    }
+
+    const matchExpr = ['match', ['get', 'FIPS']]
+    for (const [fips, color] of Object.entries(fipsToColorMap)) {
+        matchExpr.push(fips, color)
+    }
+    matchExpr.push('#ffffff')
+
+    return matchExpr
+}
+
+function updateCountyFills(map, alerts) {
+    const matchExpr = getCountyFillMatchExpr(alerts)
+    map.setPaintProperty('county-fills', 'fill-color', matchExpr)
 }
 
 function drawStates(map, stateData) {

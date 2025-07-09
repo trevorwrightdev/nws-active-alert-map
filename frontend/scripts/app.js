@@ -5,55 +5,35 @@ var map = new maplibregl.Map({
     zoom: 3,
 })
 
-function generateLegend() {
-    const legendContainer = document.getElementById('legend')
-    legendContainer.innerHTML = ''
-
-    Object.entries(COLOR_MAP).forEach(([eventType, color]) => {
-        const legendItem = document.createElement('div')
-        legendItem.className = 'legend-item'
-
-        const colorDiv = document.createElement('div')
-        colorDiv.className = 'legend-item-color'
-        colorDiv.style.backgroundColor = color
-
-        const labelDiv = document.createElement('div')
-        labelDiv.className = 'legend-item-label'
-
-        const labelText = document.createElement('span')
-        labelText.className = 'legend-item-label-text'
-        labelText.textContent = eventType
-
-        labelDiv.appendChild(labelText)
-        legendItem.appendChild(colorDiv)
-        legendItem.appendChild(labelDiv)
-        legendContainer.appendChild(legendItem)
-    })
-}
-
 async function init() {
-    generateLegend()
-
     const { data: alerts } = await fetchAlerts()
     const countyData = await getJson('data/county-shapefile.json')
     const stateData = await getJson('data/state-shapefile.json')
 
     if (!alerts) return
 
-    drawCountiesWithAlerts(map, countyData, alerts)
-    drawAlertPolygons(map, alerts)
+    initCountiesWithAlertsLayer(map, countyData, alerts.features)
+    initAlertPolygonsLayer(map, alerts.features)
     drawStates(map, stateData)
-    populateAlertListPage(alerts)
+    populateAlertListPage(alerts.features)
 
     map.on('idle', () => {
         document.getElementById('map').style.display = 'block'
     })
+
+    socket.on('alerts-update', alerts => {
+        updateAlertPolygons(map, alerts.features)
+        updateCountyFills(map, alerts.features)
+        populateAlertListPage(alerts.features)
+    })
 }
 
-init()
+generateLegend()
 
 document.getElementById('back-to-home').addEventListener('click', showHomePage)
 document.getElementById('nav-map').addEventListener('click', showHomePage)
 document
     .getElementById('nav-alerts')
     .addEventListener('click', showAlertListPage)
+
+init()

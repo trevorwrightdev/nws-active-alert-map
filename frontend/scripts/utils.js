@@ -7,7 +7,7 @@ async function fetchAlerts() {
         }
 
         const data = await response.json()
-        return { data: data.features, error: null }
+        return { data: data, error: null }
     } catch (error) {
         console.error('Error fetching alerts:', error)
         return { data: null, error: error.message }
@@ -108,13 +108,18 @@ function showAlertListPage() {
 function getPopupHtml(alertProperties) {
     const eventColor = getEventColor(alertProperties.event)
 
+    const truncateText = (text, maxLength = 100) => {
+        if (!text || text.length <= maxLength) return text
+        return text.substring(0, maxLength) + '...'
+    }
+
     return `
         <div class="popup-container">
             <h3 class="popup-title" style="color: ${eventColor};">${
         alertProperties.event || 'Alert'
     }</h3>
             <p class="popup-text"><strong>Area:</strong> ${
-                alertProperties.areaDesc || 'N/A'
+                truncateText(alertProperties.areaDesc) || 'N/A'
             }</p>
             <p class="popup-text"><strong>Severity:</strong> ${
                 alertProperties.severity || 'N/A'
@@ -174,5 +179,31 @@ function populateAlertListPage(alerts) {
         })
 
         alertListContainer.appendChild(alertItem)
+    })
+}
+
+function generateLegend() {
+    const legendContainer = document.getElementById('legend')
+    legendContainer.innerHTML = ''
+
+    Object.entries(COLOR_MAP).forEach(([eventType, color]) => {
+        const legendItem = document.createElement('div')
+        legendItem.className = 'legend-item'
+
+        const colorDiv = document.createElement('div')
+        colorDiv.className = 'legend-item-color'
+        colorDiv.style.backgroundColor = color
+
+        const labelDiv = document.createElement('div')
+        labelDiv.className = 'legend-item-label'
+
+        const labelText = document.createElement('span')
+        labelText.className = 'legend-item-label-text'
+        labelText.textContent = eventType
+
+        labelDiv.appendChild(labelText)
+        legendItem.appendChild(colorDiv)
+        legendItem.appendChild(labelDiv)
+        legendContainer.appendChild(legendItem)
     })
 }
