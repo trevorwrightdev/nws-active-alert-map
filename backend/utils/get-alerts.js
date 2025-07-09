@@ -1,4 +1,4 @@
-export async function getAlerts() {
+async function getAlerts() {
     try {
         const response = await fetch('https://api.weather.gov/alerts/active', {
             headers: {
@@ -18,3 +18,5 @@ export async function getAlerts() {
         return { data: null, error: 'Failed to fetch alerts' }
     }
 }
+
+module.exports = { getAlerts }
