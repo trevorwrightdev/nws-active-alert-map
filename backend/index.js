@@ -1,13 +1,10 @@
 const express = require('express')
-const { Server } = require('socket.io')
 const http = require('http')
 const cors = require('cors')
-const { getAlerts } = require('./utils/get-alerts')
+const { initializeSocket } = require('./services/socket')
 const alertsRouter = require('./routes/alerts')
 const app = express()
 const port = 3001
-
-const IDLE_TIMEOUT_IN_MINUTES = 2
 
 const allowedOrigins = ['http://localhost:3000']
 
@@ -27,25 +24,7 @@ app.use(cors(corsOptions))
 
 const server = http.createServer(app)
 
-const io = new Server(server, {
-    cors: corsOptions,
-    connectionStateRecovery: {
-        maxDisconnectionDuration: IDLE_TIMEOUT_IN_MINUTES * 60 * 1000,
-        skipMiddlewares: true,
-    },
-})
-
-io.on('connection', socket => {
-    console.log(socket.id + ' connected.')
-})
-
-setInterval(async () => {
-    const { data, error } = await getAlerts()
-
-    if (!error) {
-        io.emit('alerts-update', data)
-    }
-}, 60000)
+initializeSocket(server, corsOptions)
 
 app.use('/alerts', alertsRouter)
 

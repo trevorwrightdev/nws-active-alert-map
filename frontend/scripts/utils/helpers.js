@@ -41,6 +41,7 @@ export function alertsToFeatures(alerts) {
         }))
 }
 
+// County alerts are alerts that don't have geometry. Otherwise we would just draw the polygon.
 export function getCountyAlerts(alerts) {
     return alerts.filter(
         alert =>
