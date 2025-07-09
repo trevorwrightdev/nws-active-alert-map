@@ -2,6 +2,7 @@ const express = require('express')
 const { Server } = require('socket.io')
 const http = require('http')
 const cors = require('cors')
+const { getAlerts } = require('./utils/get-alerts')
 const app = express()
 const port = 3001
 
@@ -36,6 +37,14 @@ const io = new Server(server, {
 io.on('connection', socket => {
     console.log(socket.id + ' connected.')
 })
+
+setInterval(async () => {
+    const { data, error } = await getAlerts()
+
+    if (!error) {
+        io.emit('alerts-update', data)
+    }
+}, 60000)
 
 const alertsRouter = require('./routes/alerts')
 app.use('/alerts', alertsRouter)
