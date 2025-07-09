@@ -99,7 +99,7 @@ export const MAP_CONFIG = {
 
 export const LAYER_STYLES = {
     countyBoundaries: {
-        'line-color': '#808080',
+        'line-color': '#cccccc',
         'line-width': 0.5,
         'line-opacity': 0.5,
     },

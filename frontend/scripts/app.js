@@ -7,7 +7,7 @@ import {
     addCountyLayers,
     updateCountyFills,
     addStateBoundariesLayer,
-    addCountyOutlinesLayer,
+    addCountyBoundariesLayer,
 } from './map/layers.js'
 import { populateAlertListPage } from './components/alert-list.js'
 import { generateLegend } from './components/legend.js'
@@ -27,7 +27,7 @@ async function initializeApp() {
 
     addCountyLayers(map, countyGeoJson, alerts.features)
     addAlertPolygonsLayer(map, alerts.features)
-    addCountyOutlinesLayer(map, countyGeoJson)
+    addCountyBoundariesLayer(map, countyGeoJson)
     addStateBoundariesLayer(map, stateGeoJson)
     populateAlertListPage(alerts.features)
 

@@ -63,31 +63,20 @@ export function addCountyLayers(map, countyGeoJson, alerts) {
         },
     })
 
-    map.addLayer({
-        id: 'county-boundaries',
-        type: 'line',
-        source: 'counties',
-        paint: LAYER_STYLES.countyBoundaries,
-    })
-
     setupCountyLayerInteractions(map)
 }
 
-export function addCountyOutlinesLayer(map, countyGeoJson) {
-    map.addSource('county-outlines', {
+export function addCountyBoundariesLayer(map, countyGeoJson) {
+    map.addSource('county-boundaries', {
         type: 'geojson',
         data: countyGeoJson,
     })
 
     map.addLayer({
-        id: 'county-outlines',
+        id: 'county-boundaries',
         type: 'line',
-        source: 'county-outlines',
-        paint: {
-            'line-color': '#cccccc',
-            'line-width': 0.5,
-            'line-opacity': 0.8,
-        },
+        source: 'county-boundaries',
+        paint: LAYER_STYLES.countyBoundaries,
     })
 }
 
