@@ -7,6 +7,7 @@ import {
     addCountyLayers,
     updateCountyFills,
     addStateBoundariesLayer,
+    addCountyOutlinesLayer,
 } from './map/layers.js'
 import { populateAlertListPage } from './components/alert-list.js'
 import { generateLegend } from './components/legend.js'
@@ -19,14 +20,15 @@ const map = new maplibregl.Map(MAP_CONFIG)
 
 async function initializeApp() {
     const { data: alerts } = await fetchAlerts()
-    const countyData = await fetchJson('data/county-shapefile.json')
-    const stateData = await fetchJson('data/state-shapefile.json')
+    const countyGeoJson = await fetchJson('data/county-shapefile.json')
+    const stateGeoJson = await fetchJson('data/state-shapefile.json')
 
     if (!alerts) return
 
-    addCountyLayers(map, countyData, alerts.features)
+    addCountyLayers(map, countyGeoJson, alerts.features)
     addAlertPolygonsLayer(map, alerts.features)
-    addStateBoundariesLayer(map, stateData)
+    addCountyOutlinesLayer(map, countyGeoJson)
+    addStateBoundariesLayer(map, stateGeoJson)
     populateAlertListPage(alerts.features)
 
     map.on('idle', () => {
@@ -46,4 +48,5 @@ initializeNavigation()
 
 window.showAlertInfoPage = showAlertInfoPage
 
+initializeSocket()
 initializeApp()

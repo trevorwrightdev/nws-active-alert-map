@@ -44,10 +44,10 @@ export function updateAlertPolygons(map, alerts) {
     })
 }
 
-export function addCountyLayers(map, countyData, alerts) {
+export function addCountyLayers(map, countyGeoJson, alerts) {
     map.addSource('counties', {
         type: 'geojson',
-        data: countyData,
+        data: countyGeoJson,
     })
 
     updateFipsToAlertMap(alerts)
@@ -73,16 +73,34 @@ export function addCountyLayers(map, countyData, alerts) {
     setupCountyLayerInteractions(map)
 }
 
+export function addCountyOutlinesLayer(map, countyGeoJson) {
+    map.addSource('county-outlines', {
+        type: 'geojson',
+        data: countyGeoJson,
+    })
+
+    map.addLayer({
+        id: 'county-outlines',
+        type: 'line',
+        source: 'county-outlines',
+        paint: {
+            'line-color': '#cccccc',
+            'line-width': 0.5,
+            'line-opacity': 0.8,
+        },
+    })
+}
+
 export function updateCountyFills(map, alerts) {
     const matchExpr = getCountyFillMatchExpr(alerts)
     updateFipsToAlertMap(alerts)
     map.setPaintProperty('county-fills', 'fill-color', matchExpr)
 }
 
-export function addStateBoundariesLayer(map, stateData) {
+export function addStateBoundariesLayer(map, stateGeoJson) {
     map.addSource('states', {
         type: 'geojson',
-        data: stateData,
+        data: stateGeoJson,
     })
 
     map.addLayer({
