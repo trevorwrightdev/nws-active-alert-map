@@ -11,7 +11,7 @@ export function normalizeFipsCode(fips) {
     return fips
 }
 
-export function truncateText(text, maxLength = 100) {
+export function truncateText(text, maxLength = 50) {
     if (!text || text.length <= maxLength) return text
     return text.substring(0, maxLength) + '...'
 }

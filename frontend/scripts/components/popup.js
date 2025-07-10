@@ -14,9 +14,6 @@ export function createPopupHtml(alertProperties) {
             <p class="popup-text"><strong>Severity:</strong> ${
                 alertProperties.severity || 'N/A'
             }</p>
-            <p class="popup-text"><strong>Effective:</strong> ${
-                alertProperties.effective || 'N/A'
-            }</p>
             <p class="popup-text"><strong>Expires:</strong> ${
                 alertProperties.expires || 'N/A'
             }</p>
